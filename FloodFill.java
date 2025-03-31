@@ -5,27 +5,32 @@ import java.awt.image.BufferedImage;
 public class FloodFill {
     MyStack<Integer> stack = new MyStack<>();
     MyQueue<Integer> queue = new MyQueue<>();
-    int pointZero;
     int esmeralda = 0xFF50C878;
     BufferedImage imagem;
 
     public FloodFill(Image imagem) {
         this.imagem = imagem.getImagem();
-        this.pointZero = imagem.getCorOriginal();
     }
 
-    public void stackFill(JPanel panel) {
-        int x = 0;
-        int y = 0;
+    public void stackFill(JPanel panel, int startX, int startY) {
+        if (startX < 0 || startX >= imagem.getWidth() || startY < 0 || startY >= imagem.getHeight()) {
+            throw new IllegalArgumentException("Ponto inicial fora dos limites da imagem!");
+        }
 
-        stack.push(x);
-        stack.push(y);
+        int pointZero = imagem.getRGB(startX, startY);
+
+        if (pointZero == esmeralda) {
+            return;
+        }
+
+        stack.push(startX);
+        stack.push(startY);
 
         boolean[][] visited = new boolean[imagem.getHeight()][imagem.getWidth()];
 
         while (!stack.isEmpty()) {
-            y = stack.pop();
-            x = stack.pop();
+            int y = stack.pop();
+            int x = stack.pop();
 
             if (x < 0 || x >= imagem.getWidth() || y < 0 || y >= imagem.getHeight()) {
                 continue;
@@ -42,26 +47,28 @@ public class FloodFill {
                     e.printStackTrace();
                 }
 
-                if (x > 0) {
-                    stack.push(x - 1);
-                    stack.push(y);
-                }
-                if (x < imagem.getWidth() - 1) {
-                    stack.push(x + 1);
-                    stack.push(y);
-                }
-                if (y > 0) {
+                if (y > 0) { // topo
                     stack.push(x);
                     stack.push(y - 1);
                 }
-                if (y < imagem.getHeight() - 1) {
+                if (y < imagem.getHeight() - 1) { // abaixo
                     stack.push(x);
                     stack.push(y + 1);
                 }
+                if (x > 0) { // esquerda
+                    stack.push(x - 1);
+                    stack.push(y);
+                }
+                if (x < imagem.getWidth() - 1) { // direita
+                    stack.push(x + 1);
+                    stack.push(y);
+                }
+
             }
         }
     }
-    public void queueFill(int color){
+
+    public void queueFill(int color) {
 
     }
 }
