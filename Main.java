@@ -16,6 +16,8 @@ public class Main {
         frame.add(panel);
         frame.setVisible(true);
 
-        flood.stackFill(panel, 0, 0);
+        // flood.stackFill(panel, 0, 0);
+
+        flood.queueFill(panel, 0, 0);
     }
 }
